@@ -220,7 +220,7 @@
                 <!-- User ID Display (Simplified as no explicit login) -->
                 <div class="bg-indigo-100 border-l-4 border-indigo-500 text-indigo-700 p-4 rounded-lg mb-6 shadow-sm" role="alert">
                     <p class="font-bold">Current User ID:</p>
-                    <p id="userIdDisplay" class="text-sm break-all">default-admin-id</p>
+                    <p id="userIdDisplay" class="text-sm break-all">local-admin-id</p>
                 </div>
 
                 <!-- Dashboard Section -->
@@ -462,24 +462,13 @@
         </div>
     </div>
 
-    <script type="module">
-        // Firebase imports
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"; // Removed explicit email/password auth
-        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Global variables for Firebase config (provided by the environment)
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        // initialAuthToken is no longer directly used for explicit login, but kept for consistency if needed for anonymous sign-in
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        let app;
-        let db; // Firestore instance
-        let auth;
-        let currentUserId = null;
-        let isAuthReady = false; // Flag to ensure Firebase operations wait for auth
-        let allMembers = []; // Store all members for client-side filtering
+    <script>
+        // No Firebase imports needed as it's removed
+        // Global variables (appId and firebaseConfig are no longer used for Firebase, but kept for consistency)
+        const appId = 'local-app-id'; // Hardcoded as Firebase is removed
+        let currentUserId = 'local-admin-id'; // Hardcoded as Firebase Auth is removed
+        let isAuthReady = true; // Always true as no external authentication is needed
+        let allMembers = []; // Store all members locally
 
         // --- Dashboard Layout DOM Elements ---
         const dashboardLayout = document.getElementById('dashboardLayout');
@@ -497,128 +486,65 @@
         const recentActivitiesList = document.getElementById('recentActivitiesList');
 
         // Member Management specific elements
-        const addMemberButton = document.getElementById('addMemberButton'); // New button to open modal
-        const addEditMemberModal = document.getElementById('addEditMemberModal'); // The modal container
-        const closeAddEditModalButton = document.getElementById('closeAddEditModal'); // Button to close modal
-        const modalTitle = document.getElementById('modalTitle'); // Title of the modal (Add/Edit)
+        const addMemberButton = document.getElementById('addMemberButton');
+        const addEditMemberModal = document.getElementById('addEditMemberModal');
+        const closeAddEditModalButton = document.getElementById('closeAddEditModal');
+        const modalTitle = document.getElementById('modalTitle');
 
-        const addMemberForm = document.getElementById('addMemberForm'); // The form itself (now inside modal)
+        const addMemberForm = document.getElementById('addMemberForm');
         const memberListTableBody = document.getElementById('memberList');
         const noMembersMessage = document.getElementById('noMembersMessage');
-        const formMessage = document.getElementById('formMessage'); // Message for form (inside modal)
+        const formMessage = document.getElementById('formMessage');
         const memberSearchInput = document.getElementById('memberSearch');
 
         // Modal elements for member deletion
         const confirmationModal = document.getElementById('confirmationModal');
         const cancelDeleteButton = document.getElementById('cancelDelete');
         const confirmDeleteButton = document.getElementById('confirmDelete');
-        let memberToDeleteId = null; // To store the ID of the member to be deleted
+        let memberToDeleteId = null;
 
         // Navigation and content section elements
         const navLinks = document.querySelectorAll('.nav-link');
         const contentSections = document.querySelectorAll('.content-section');
 
         /**
-         * Initializes Firebase and sets up anonymous authentication.
-         * The dashboard will now be directly accessible.
+         * Initializes the dashboard.
+         * Since Firebase is removed, this function directly sets up the UI.
          */
-        async function initializeFirebase() {
-            try {
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app); // Initialize Firestore
-                auth = getAuth(app);
+        function initializeDashboard() {
+            userIdDisplay.textContent = currentUserId;
+            loggedInUserName.textContent = "Admin User";
+            userEmail.textContent = "admin@example.com";
+            dashboardLayout.classList.remove('hidden'); // Ensure dashboard is visible
 
-                // Sign in anonymously to get a user ID for Firestore operations
-                // This ensures there's always an authenticated user for security rules
-                // but doesn't require explicit login forms.
-                onAuthStateChanged(auth, async (user) => {
-                    if (user) {
-                        currentUserId = user.uid;
-                        userIdDisplay.textContent = currentUserId;
-                        loggedInUserName.textContent = "Admin User"; // Default name as no explicit login
-                        userEmail.textContent = "admin@example.com"; // Default email
-                        console.log("User authenticated anonymously:", currentUserId);
-                    } else {
-                        try {
-                            // If no user, sign in anonymously
-                            await signInAnonymously(auth);
-                            currentUserId = auth.currentUser?.uid || 'default-admin-id'; // Fallback
-                            userIdDisplay.textContent = currentUserId;
-                            loggedInUserName.textContent = "Admin User";
-                            userEmail.textContent = "admin@example.com";
-                            console.log("Signed in anonymously. User ID:", currentUserId);
-                        } catch (error) {
-                            console.error("Error during anonymous authentication:", error);
-                            userIdDisplay.textContent = "Authentication failed.";
-                            loggedInUserName.textContent = "Error";
-                            userEmail.textContent = "Please check console.";
-                        }
-                    }
-                    isAuthReady = true; // Set flag once auth state is checked
-                    dashboardLayout.classList.remove('hidden'); // Ensure dashboard is visible
-                    loadPlaceholderDashboardData(); // Load dashboard data
-                    setupRealtimeListener(); // Setup member list listener
-                    showSection('dashboardSection'); // Show dashboard by default
-                });
-
-            } catch (error) {
-                console.error("Error initializing Firebase:", error);
-                userIdDisplay.textContent = "Firebase initialization failed.";
-                loggedInUserName.textContent = "Error";
-                userEmail.textContent = "Please check console.";
-                dashboardLayout.classList.add('hidden'); // Hide dashboard if init fails
-                alert("Firebase initialization failed. Check console for details.");
-            }
+            loadPlaceholderDashboardData(); // Load dashboard data
+            setupLocalMemberManagement(); // Setup local member management
+            showSection('dashboardSection'); // Show dashboard by default
         }
 
         /**
          * Loads placeholder data for the dashboard elements.
-         * In a real application, this would fetch data from Firestore.
          */
         function loadPlaceholderDashboardData() {
-            // Placeholder data for demonstration
             totalMembersEl.textContent = '150';
             activeMembersEl.textContent = '120';
             visitorsEl.textContent = '30';
-
-            // Events and activities are already hardcoded in HTML for this UI rebuild
-            // In a real app, you'd populate these lists dynamically
+            // Events and activities are hardcoded in HTML
         }
 
         /**
-         * Sets up a real-time listener for the 'members' collection in Firestore.
-         * Updates the UI whenever there are changes in the database.
+         * Sets up local member management.
+         * Populates with dummy data and renders the list.
          */
-        function setupRealtimeListener() {
-            if (!db || !currentUserId || !isAuthReady) {
-                console.log("Firestore not ready or user not authenticated. Skipping member list listener setup.");
-                return;
-            }
-
-            // Define the collection path for public data
-            const membersCollectionRef = collection(db, `artifacts/${appId}/public/data/members`);
-
-            // Use onSnapshot to listen for real-time updates
-            onSnapshot(membersCollectionRef, (snapshot) => {
-                allMembers = []; // Clear and repopulate allMembers array
-                snapshot.forEach(doc => {
-                    allMembers.push({ id: doc.id, ...doc.data() });
-                });
-
-                // Sort members by last name then first name for consistent display (in-memory sorting)
-                allMembers.sort((a, b) => {
-                    const lastNameCompare = (a.lastName || '').localeCompare(b.lastName || '');
-                    if (lastNameCompare !== 0) return lastNameCompare;
-                    return (a.firstName || '').localeCompare(b.firstName || '');
-                });
-
-                // Apply current search filter
-                filterAndDisplayMembers();
-
-            }, (error) => {
-                console.error("Error fetching members:", error);
-                memberListTableBody.innerHTML = `<tr><td colspan="9" class="px-6 py-4 whitespace-nowrap text-center text-sm text-red-500">Error loading members. Please try again.</td></tr>`;
-            });
+        function setupLocalMemberManagement() {
+            // Initial dummy data for local storage
+            allMembers = [
+                { id: '1', lastName: 'Doe', firstName: 'John', gender: 'Male', status: 'Active', phone: '111-222-3333', facebook: 'john.doe', telegram: '@johndoe', emergencyCall: '111-222-4444' },
+                { id: '2', lastName: 'Smith', firstName: 'Jane', gender: 'Female', status: 'Inactive', phone: '555-666-7777', facebook: 'jane.smith', telegram: '@janesmith', emergencyCall: '555-666-8888' },
+                { id: '3', lastName: 'Brown', firstName: 'Emily', gender: 'Female', status: 'Active', phone: '999-888-7777', facebook: 'emily.brown', telegram: '@emilyb', emergencyCall: '999-888-6666' },
+                { id: '4', lastName: 'Johnson', firstName: 'Mike', gender: 'Male', status: 'Visitor', phone: '123-456-7890', facebook: 'mike.j', telegram: '@mikejohnson', emergencyCall: '123-456-9999' }
+            ];
+            filterAndDisplayMembers(); // Display initial members
         }
 
         /**
@@ -653,10 +579,9 @@
             }
         }
 
-
         /**
          * Displays a single member's data in the table.
-         * @param {Object} member - The member object from Firestore.
+         * @param {Object} member - The member object.
          */
         function displayMember(member) {
             const row = document.createElement('tr');
@@ -690,19 +615,15 @@
 
         /**
          * Handles the submission of the add member form.
-         * Adds a new member document to Firestore.
+         * Adds a new member to the local array.
          * @param {Event} event - The form submission event.
          */
-        const addMemberHandler = async (event) => {
+        const addMemberHandler = (event) => {
             event.preventDefault();
-
-            if (!db || !currentUserId || !isAuthReady) {
-                displayFormMessage("System not ready. Please wait for initialization.", true);
-                return;
-            }
 
             const formData = new FormData(addMemberForm);
             const newMember = {
+                id: String(Date.now()), // Simple unique ID for local data
                 lastName: formData.get('lastName').trim(),
                 firstName: formData.get('firstName').trim(),
                 gender: formData.get('gender'),
@@ -711,7 +632,7 @@
                 facebook: formData.get('facebook').trim(),
                 telegram: formData.get('telegram').trim(),
                 emergencyCall: formData.get('emergencyCall').trim(),
-                createdAt: new Date().toISOString() // Timestamp for creation
+                createdAt: new Date().toISOString()
             };
 
             // Basic validation
@@ -720,18 +641,17 @@
                 return;
             }
 
-            try {
-                // Add a new document to the 'members' collection
-                await addDoc(collection(db, `artifacts/${appId}/public/data/members`), newMember);
-                addMemberForm.reset(); // Clear the form
-                displayFormMessage("Member added successfully!", false);
-                hideAddEditModal(); // Hide modal after successful add
-            } catch (e) {
-                console.error("Error adding document: ", e);
-                displayFormMessage("Error adding member. Please try again.", true);
-            }
+            allMembers.push(newMember);
+            allMembers.sort((a, b) => { // Re-sort after adding
+                const lastNameCompare = (a.lastName || '').localeCompare(b.lastName || '');
+                if (lastNameCompare !== 0) return lastNameCompare;
+                return (a.firstName || '').localeCompare(b.firstName || '');
+            });
+            filterAndDisplayMembers(); // Re-render the list
+            addMemberForm.reset();
+            displayFormMessage("Member added successfully!", false);
+            hideAddEditModal();
         };
-        // Attach the initial add member handler
         addMemberForm.addEventListener('submit', addMemberHandler);
 
         /**
@@ -740,8 +660,7 @@
          * @param {Object} memberData - The current data of the member.
          */
         function editMember(memberId, memberData) {
-            showAddEditModal('Edit Member'); // Show modal with "Edit Member" title
-            // Populate the form fields with the member's data
+            showAddEditModal('Edit Member');
             document.getElementById('lastName').value = memberData.lastName || '';
             document.getElementById('firstName').value = memberData.firstName || '';
             document.getElementById('gender').value = memberData.gender || '';
@@ -751,29 +670,22 @@
             document.getElementById('telegram').value = memberData.telegram || '';
             document.getElementById('emergencyCall').value = memberData.emergencyCall || '';
 
-            // Change the form button to "Update Member" and store the memberId
             const submitButton = addMemberForm.querySelector('button[type="submit"]');
             submitButton.innerHTML = '<i class="fas fa-save mr-2"></i> Update Member';
             submitButton.classList.remove('bg-indigo-600', 'hover:bg-indigo-700');
             submitButton.classList.add('bg-green-600', 'hover:bg-green-700');
-            submitButton.dataset.editId = memberId; // Store the ID for updating
+            submitButton.dataset.editId = memberId;
 
-            // Modify the form's submit event listener temporarily for update
-            addMemberForm.removeEventListener('submit', addMemberHandler); // Remove original listener
-            addMemberForm.addEventListener('submit', updateMemberHandler); // Add update listener
+            addMemberForm.removeEventListener('submit', addMemberHandler);
+            addMemberForm.addEventListener('submit', updateMemberHandler);
         }
 
         /**
-         * Handles the update of an existing member in Firestore.
+         * Handles the update of an existing member in the local array.
          * @param {Event} event - The form submission event.
          */
-        async function updateMemberHandler(event) {
+        const updateMemberHandler = (event) => {
             event.preventDefault();
-
-            if (!db || !currentUserId || !isAuthReady) {
-                displayFormMessage("System not ready. Please wait for initialization.", true);
-                return;
-            }
 
             const submitButton = addMemberForm.querySelector('button[type="submit"]');
             const memberIdToUpdate = submitButton.dataset.editId;
@@ -793,27 +705,30 @@
                 facebook: formData.get('facebook').trim(),
                 telegram: formData.get('telegram').trim(),
                 emergencyCall: formData.get('emergencyCall').trim(),
-                updatedAt: new Date().toISOString() // Timestamp for update
+                updatedAt: new Date().toISOString()
             };
 
-            // Basic validation
             if (!updatedMemberData.lastName || !updatedMemberData.firstName || !updatedMemberData.gender || !updatedMemberData.status) {
                 displayFormMessage("Please fill in all required fields (Last Name, First Name, Gender, Status).", true);
                 return;
             }
 
-            try {
-                const memberDocRef = doc(db, `artifacts/${appId}/public/data/members`, memberIdToUpdate);
-                await updateDoc(memberDocRef, updatedMemberData);
-
+            const memberIndex = allMembers.findIndex(m => m.id === memberIdToUpdate);
+            if (memberIndex !== -1) {
+                allMembers[memberIndex] = { ...allMembers[memberIndex], ...updatedMemberData };
+                allMembers.sort((a, b) => { // Re-sort after updating
+                    const lastNameCompare = (a.lastName || '').localeCompare(b.lastName || '');
+                    if (lastNameCompare !== 0) return lastNameCompare;
+                    return (a.firstName || '').localeCompare(b.firstName || '');
+                });
+                filterAndDisplayMembers(); // Re-render the list
                 displayFormMessage("Member updated successfully!", false);
-                resetFormForAdd(); // Reset form back to "Add Member" mode
-                hideAddEditModal(); // Hide modal after successful update
-            } catch (e) {
-                console.error("Error updating document: ", e);
-                displayFormMessage("Error updating member. Please try again.", true);
+                resetFormForAdd();
+                hideAddEditModal();
+            } else {
+                displayFormMessage("Error updating member: Member not found.", true);
             }
-        }
+        };
 
         /**
          * Resets the form to its original "Add Member" state.
@@ -824,9 +739,8 @@
             submitButton.innerHTML = '<i class="fas fa-plus mr-2"></i> Add Member';
             submitButton.classList.remove('bg-green-600', 'hover:bg-green-700');
             submitButton.classList.add('bg-indigo-600', 'hover:bg-indigo-700');
-            delete submitButton.dataset.editId; // Remove the edit ID
+            delete submitButton.dataset.editId;
 
-            // Revert event listener to addMemberHandler
             addMemberForm.removeEventListener('submit', updateMemberHandler);
             addMemberForm.addEventListener('submit', addMemberHandler);
         }
@@ -849,24 +763,20 @@
         }
 
         /**
-         * Handles the actual deletion of a member from Firestore.
+         * Handles the actual deletion of a member from the local array.
          */
-        confirmDeleteButton.addEventListener('click', async () => {
+        confirmDeleteButton.addEventListener('click', () => {
             if (!memberToDeleteId) return;
 
-            if (!db || !currentUserId || !isAuthReady) {
-                alert("System not ready. Cannot delete."); // Using alert as formMessage is in modal
-                hideDeleteConfirmation();
-                return;
-            }
+            const initialLength = allMembers.length;
+            allMembers = allMembers.filter(member => member.id !== memberToDeleteId);
 
-            try {
-                await deleteDoc(doc(db, `artifacts/${appId}/public/data/members`, memberToDeleteId));
+            if (allMembers.length < initialLength) {
+                filterAndDisplayMembers(); // Re-render the list
                 hideDeleteConfirmation();
-                // No need to display form message here, as onSnapshot will update the list
-            } catch (e) {
-                console.error("Error deleting document: ", e);
-                alert("Error deleting member. Please try again."); // Using alert as formMessage is in modal
+                // No need for a form message here, as the list updates visually
+            } else {
+                alert("Error deleting member: Member not found.");
                 hideDeleteConfirmation();
             }
         });
@@ -876,7 +786,6 @@
 
         /**
          * Displays a message on the form, either success or error.
-         * This message is now specific to the add/edit member form inside the modal.
          * @param {string} message - The message to display.
          * @param {boolean} isError - True if it's an error message, false for success.
          */
@@ -890,7 +799,7 @@
             }
             setTimeout(() => {
                 formMessage.classList.add('hidden');
-            }, 5000); // Hide message after 5 seconds
+            }, 5000);
         }
 
         /**
@@ -899,18 +808,15 @@
          * @param {string} sectionId - The ID of the section to show.
          */
         function showSection(sectionId) {
-            // Hide all content sections
             contentSections.forEach(section => {
                 section.classList.remove('active');
             });
 
-            // Show the selected content section
             const targetSection = document.getElementById(sectionId);
             if (targetSection) {
                 targetSection.classList.add('active');
             }
 
-            // Update active navigation link styling
             navLinks.forEach(link => {
                 link.classList.remove('active-link');
             });
@@ -922,22 +828,10 @@
 
         /**
          * Handles the user logout process.
-         * Since there's no explicit login, this will simply refresh the page.
+         * Since there's no explicit login or persistent auth, this simply reloads the page.
          */
         async function handleLogout() {
-            // In this version, since there's no explicit login,
-            // logging out means simply refreshing the page or clearing local data.
-            // If you later re-introduce authentication, this function would call Firebase signOut.
-            if (auth && auth.currentUser) {
-                try {
-                    await auth.signOut();
-                    console.log("User signed out.");
-                } catch (error) {
-                    console.error("Error signing out:", error);
-                }
-            }
-            // For a direct-access dashboard, a refresh effectively "resets" the session
-            window.location.reload();
+            window.location.reload(); // Reloads the page to reset local data
         }
 
         /**
@@ -947,7 +841,7 @@
             document.body.classList.toggle('dark-mode');
             const isDarkMode = document.body.classList.contains('dark-mode');
             themeToggleButton.innerHTML = isDarkMode ? '<i class="fas fa-sun mr-2"></i> Toggle Light Mode' : '<i class="fas fa-moon mr-2"></i> Toggle Dark Mode';
-            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light'); // Save preference
+            localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
         }
 
         // Apply theme preference on load
@@ -964,16 +858,15 @@
 
         /**
          * Shows the Add/Edit Member Modal.
-         * @param {string} title - The title to display in the modal (e.g., "Add New Member", "Edit Member").
+         * @param {string} title - The title to display in the modal.
          */
         function showAddEditModal(title = 'Add New Member') {
             modalTitle.textContent = title;
             addEditMemberModal.classList.remove('hidden');
-            // Reset form and message when opening for a new add
             if (title === 'Add New Member') {
                 resetFormForAdd();
             }
-            formMessage.classList.add('hidden'); // Hide previous messages
+            formMessage.classList.add('hidden');
         }
 
         /**
@@ -981,14 +874,13 @@
          */
         function hideAddEditModal() {
             addEditMemberModal.classList.add('hidden');
-            resetFormForAdd(); // Always reset form when closing
+            resetFormForAdd();
         }
-
 
         // Add event listeners
         navLinks.forEach(link => {
             link.addEventListener('click', (event) => {
-                event.preventDefault(); // Prevent default link behavior
+                event.preventDefault();
                 const sectionId = link.id.replace('nav-', '') + 'Section';
                 showSection(sectionId);
             });
@@ -996,23 +888,20 @@
 
         logoutButton.addEventListener('click', handleLogout);
         themeToggleButton.addEventListener('click', toggleTheme);
-        memberSearchInput.addEventListener('input', filterAndDisplayMembers); // Listen for search input changes
+        memberSearchInput.addEventListener('input', filterAndDisplayMembers);
 
-        // Event listeners for the new modal
         addMemberButton.addEventListener('click', () => showAddEditModal('Add New Member'));
         closeAddEditModalButton.addEventListener('click', hideAddEditModal);
-        // Close modal if clicked outside (on the overlay)
         addEditMemberModal.addEventListener('click', (event) => {
             if (event.target === addEditMemberModal) {
                 hideAddEditModal();
             }
         });
 
-
-        // Initialize Firebase and apply theme when the window loads
+        // Initialize the dashboard when the window loads
         window.onload = () => {
             applySavedTheme();
-            initializeFirebase();
+            initializeDashboard();
         };
     </script>
 </body>
