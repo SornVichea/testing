@@ -389,6 +389,17 @@
                     </select>
                 </div>
                 <div>
+                    <label for="member-status" class="block text-sm font-medium text-gray-700 dark:text-gray-300" id="member-status-label">Status</label>
+                    <select id="member-status" name="status" class="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500" required>
+                        <option value="Active" id="status-option-active">Active</option>
+                        <option value="Inactive" id="status-option-inactive">Inactive</option>
+                        <option value="Cell group" id="status-option-cellgroup">Cell group</option>
+                        <option value="Parth-Way" id="status-option-parthway">Parth-Way</option>
+                        <option value="New believer" id="status-option-newbeliever">New believer</option>
+                        <option value="Visitor" id="status-option-visitor">Visitor</option>
+                    </select>
+                </div>
+                <div>
                     <label for="member-from" class="block text-sm font-medium text-gray-700 dark:text-gray-300" id="from-label">From (Address/Origin)</label>
                     <input type="text" id="member-from" name="from" class="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500" />
                 </div>
@@ -890,6 +901,13 @@
                 'search': 'Search',
                 'baptism-status-label': 'baptismStatus',
                 'select-baptism-status-placeholder': 'selectBaptismStatus',
+                'member-status-label': 'status', // New translation key for the status label
+                'status-option-active': 'active',
+                'status-option-inactive': 'inactive',
+                'status-option-cellgroup': 'cellGroup',
+                'status-option-parthway': 'parthWay',
+                'status-option-newbeliever': 'newBeliever',
+                'status-option-visitor': 'visitor',
             };
 
             for (const id in elementsToTranslate) {
@@ -921,6 +939,13 @@
                     } else {
                         option.textContent = getTranslation(option.value.toLowerCase().replace(/[\s-]/g, ''));
                     }
+                });
+            }
+
+            const memberStatusSelect = document.getElementById('member-status');
+            if (memberStatusSelect) {
+                Array.from(memberStatusSelect.options).forEach(option => {
+                    option.textContent = getTranslation(option.value.toLowerCase().replace(/[\s-]/g, ''));
                 });
             }
 
@@ -1268,6 +1293,7 @@
             const memberDateOfBirthInput = document.getElementById('member-dateOfBirth');
             const memberMemberClassSelect = document.getElementById('member-memberClass');
             const memberBaptismStatusSelect = document.getElementById('member-baptismStatus');
+            const memberStatusSelect = document.getElementById('member-status'); // New: Status select
             const memberFromInput = document.getElementById('member-from');
             const memberServiceSelect = document.getElementById('member-service');
             const memberPhoneNumberInput = document.getElementById('member-phoneNumber');
@@ -1288,6 +1314,7 @@
                 if (memberDateOfBirthInput) memberDateOfBirthInput.value = member.dateOfBirth || '';
                 if (memberMemberClassSelect) memberMemberClassSelect.value = member.memberClass || '';
                 if (memberBaptismStatusSelect) memberBaptismStatusSelect.value = member.baptismStatus || '';
+                if (memberStatusSelect) memberStatusSelect.value = member.status || 'Active'; // Set status for existing member
                 if (memberFromInput) memberFromInput.value = member.from || '';
                 if (memberServiceSelect) memberServiceSelect.value = member.service || '';
                 if (memberPhoneNumberInput) memberPhoneNumberInput.value = member.phone || '';
@@ -1313,6 +1340,7 @@
                 if (memberDateOfBirthInput) memberDateOfBirthInput.value = '';
                 if (memberMemberClassSelect) memberMemberClassSelect.value = '';
                 if (memberBaptismStatusSelect) memberBaptismStatusSelect.value = '';
+                if (memberStatusSelect) memberStatusSelect.value = 'Active'; // Default to Active for new member
                 if (memberFromInput) memberFromInput.value = '';
                 if (memberServiceSelect) memberServiceSelect.value = '';
                 if (memberPhoneNumberInput) memberPhoneNumberInput.value = '';
@@ -1757,13 +1785,13 @@
                 dateOfBirth: document.getElementById('member-dateOfBirth').value,
                 memberClass: document.getElementById('member-memberClass').value,
                 baptismStatus: document.getElementById('member-baptismStatus').value,
+                status: document.getElementById('member-status').value, // Get status from the select element
                 from: document.getElementById('member-from').value,
                 service: document.getElementById('member-service').value,
                 phone: document.getElementById('member-phoneNumber').value,
                 emergencyNumber: document.getElementById('member-emergencyNumber').value,
                 facebook: document.getElementById('member-facebook').value,
                 telegram: document.getElementById('member-telegram').value,
-                status: appState.editingMember ? appState.editingMember.status : 'Active',
             };
 
             const photoFile = document.getElementById('member-photo-upload').files[0];
