@@ -131,13 +131,10 @@
 
         <!-- Main Content Area -->
         <main id="main-content" class="w-full lg:w-3/4 flex-grow">
-            <div id="loading-spinner" class="flex justify-center items-center h-64 hidden">
-                <div class="rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-500 dark:border-indigo-300 animate-spin"></div>
-                <p class="ml-4 text-lg text-gray-700 dark:text-gray-300" id="loading-text">Loading...</p>
-            </div>
+            <!-- Loading spinner removed as local operations are instant -->
 
             <!-- Dashboard Section -->
-            <section id="dashboard-section" class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow-md text-gray-900 dark:text-gray-100">
+            <section id="dashboard-section" class="p-6 bg-white dark:bg-gray-700 rounded-lg shadow-md text-gray-900 dark:text-gray-100 hidden">
                 <h2 class="text-2xl font-semibold mb-4" id="dashboard-overview-title">Dashboard Overview</h2>
                 <p class="text-gray-600 dark:text-gray-300 mb-4" id="dashboard-welcome-text">Welcome to your Church Management Dashboard! Here you'll find quick summaries and key metrics.</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
@@ -182,11 +179,11 @@
 
                 <!-- Action buttons: Add New Member, Import, and Export buttons -->
                 <div class="flex flex-col sm:flex-row justify-end items-center gap-4 mb-4 flex-wrap">
-                    <label for="importExcel" class="px-4 py-2 text-sm bg-gray-200 text-gray-800 rounded-lg shadow-md hover:bg-gray-300 hover:shadow-lg cursor-pointer text-center dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-500 transition duration-200 ease-in-out">
+                    <label for="importExcel" class="flex-1 px-4 py-2 text-sm bg-gray-200 text-gray-800 rounded-lg shadow-md hover:bg-gray-300 hover:shadow-lg cursor-pointer text-center dark:bg-gray-600 dark:text-gray-100 dark:hover:bg-gray-500 transition duration-200 ease-in-out">
                         <span id="import-excel-text">Import Excel</span>
                         <input type="file" id="importExcel" accept=".xlsx, .xls" class="hidden" />
                     </label>
-                    <button id="export-excel-btn" class="px-4 py-2 text-sm bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-200 ease-in-out">Export as Excel</button>
+                    <button id="export-excel-btn" class="flex-1 px-4 py-2 text-sm bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-200 ease-in-out">Export Excel</button>
                     <button id="add-new-member-btn" class="px-6 py-3 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 transition duration-200 ease-in-out">Add New Member</button>
                 </div>
 
@@ -195,7 +192,7 @@
                     <!-- Left side: Filters -->
                     <div class="flex flex-col sm:flex-row gap-4 items-center">
                         <select id="status-filter-select" class="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-gray-50 dark:bg-gray-600 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200 ease-in-out">
-                            <option value="All" id="status-all">Show All</option>
+                            <option value="All" id="status-all">All</option>
                             <option value="Active" id="status-active">Active</option>
                             <option value="Inactive" id="status-inactive">Inactive</option>
                             <option value="Cell group" id="status-cellgroup">Cell group</option>
@@ -227,6 +224,7 @@
                                 <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" id="table-name-header">Name</th>
                                 <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" id="table-gender-header">Gender</th>
                                 <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" id="table-phone-header">Phone</th>
+                                <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" id="table-baptism-status-header">Baptism Status</th>
                                 <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" id="table-status-header">Status</th>
                                 <th scope="col" class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" id="table-actions-header">Actions</th>
                             </tr>
@@ -369,11 +367,11 @@
                     </select>
                 </div>
                 <div>
-                    <label for="member-statue" class="block text-sm font-medium text-gray-700 dark:text-gray-300" id="statue-label">Statue</label>
-                    <select id="member-statue" name="statue" class="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500">
-                        <option value="" id="select-statue-placeholder">Select Statue</option>
-                        <option value="Done" id="statue-done">Done</option>
-                        <option value="Not yet" id="statue-not-yet">Not yet</option>
+                    <label for="member-baptismStatus" class="block text-sm font-medium text-gray-700 dark:text-gray-300" id="baptism-status-label">Baptism Status</label>
+                    <select id="member-baptismStatus" name="baptismStatus" class="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="" id="select-baptism-status-placeholder">Select Baptism Status</option>
+                        <option value="Baptism done" id="baptism-done">Baptism done</option>
+                        <option value="Baptism not yet" id="baptism-not-yet">Baptism not yet</option>
                     </select>
                 </div>
                 <div>
@@ -404,10 +402,6 @@
                 <div>
                     <label for="member-telegram" class="block text-sm font-medium text-gray-700 dark:text-gray-300" id="telegram-id-label">Telegram ID</label>
                     <input type="text" id="member-telegram" name="telegram" class="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., @yourtelegramid" />
-                </div>
-                <div>
-                    <label for="member-temperature" class="block text-sm font-medium text-gray-700 dark:text-gray-300" id="temperature-label">Temperature (°C)</label>
-                    <input type="number" step="0.1" id="member-temperature" name="temperature" class="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500" placeholder="e.g., 36.5" />
                 </div>
                 <div class="col-span-1 md:col-span-2 flex justify-end space-x-3 mt-4">
                     <button type="button" id="member-modal-cancel-btn" class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-600 hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-200 ease-in-out">Cancel</button>
@@ -520,25 +514,14 @@
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
         // Global App State
         const appState = {
-            db: null,
-            auth: null,
-            userId: null,
-            isAuthReady: false,
-            privateCollectionPath: null,
-            activeSection: 'dashboard',
+            activeSection: 'members', // Default active section to 'members'
             theme: 'light',
             language: 'en',
-            isLoading: true,
-            members: [], // This will be populated by Firestore
-            events: [],
+            members: [], // This will be populated by local storage
+            events: [], // This will be populated by local storage
             editingMember: null,
             selectedMember: null,
             memberToDelete: null,
@@ -557,7 +540,6 @@
                 { month: 'Jun 2025', totalMembers: 175, newMembers: 15, activeMembers: 165 },
                 { month: 'Jul 2025', totalMembers: 180, newMembers: 10, activeMembers: 170 },
             ],
-            hasCheckedForInitialMembers: false, // New flag to track initial member data check
             translations: {
                 en: {
                     dashboard: 'Dashboard',
@@ -578,7 +560,7 @@
                     membersList: 'Members List',
                     manageMembers: 'Display and manage church members here. Search for members by name or gender.',
                     searchMembers: 'Search members...',
-                    allStatuses: 'Show All',
+                    allStatuses: 'All',
                     active: 'Active',
                     inactive: 'Inactive',
                     serving: 'Serving',
@@ -590,7 +572,7 @@
                     notYetBaptized: 'Not yet baptized',
                     show: 'Show',
                     importExcel: 'Import Excel',
-                    exportExcel: 'Export as Excel',
+                    exportExcel: 'Export Excel',
                     exportPdf: 'Export as PDF',
                     photo: 'Photo',
                     name: 'Name',
@@ -663,11 +645,10 @@
                     reportNewMembers: 'New Members',
                     reportActiveMembers: 'Active Members',
                     search: 'Search',
-                    statue: 'Statue',
-                    selectStatue: 'Select Statue',
-                    done: 'Done',
-                    notYet: 'Not yet',
-                    temperature: 'Temperature', // New translation key
+                    baptismStatus: 'Baptism Status',
+                    selectBaptismStatus: 'Select Baptism Status',
+                    baptismDone: 'Baptism done',
+                    baptismNotYet: 'Baptism not yet',
                 },
                 km: {
                     dashboard: 'ផ្ទាំងគ្រប់គ្រង',
@@ -688,7 +669,7 @@
                     membersList: 'បញ្ជីសមាជិក',
                     manageMembers: 'បង្ហាញនិងគ្រប់គ្រងសមាជិកព្រះវិហារនៅទីនេះ។ ស្វែងរកសមាជិកតាមឈ្មោះ ឬភេទ។',
                     searchMembers: 'ស្វែងរកសមាជិក...',
-                    allStatuses: 'គ្រប់ស្ថានភាព',
+                    allStatuses: 'ទាំងអស់',
                     active: 'សមាជិកសកម្ម',
                     inactive: 'សមាជិកអសកម្ម',
                     serving: 'បម្រើ',
@@ -700,7 +681,7 @@
                     notYetBaptized: 'មិនទាន់ច្រមុជទឹក',
                     show: 'បង្ហាញ',
                     importExcel: 'នាំចូល Excel',
-                    exportExcel: 'នាំចេញជា Excel',
+                    exportExcel: 'នាំចេញ Excel',
                     exportPdf: 'នាំចេញជា PDF',
                     photo: 'រូបថត',
                     name: 'ឈ្មោះ',
@@ -773,11 +754,10 @@
                     reportNewMembers: 'សមាជិកថ្មី',
                     reportActiveMembers: 'សមាជិកសកម្ម',
                     search: 'ស្វែងរក',
-                    statue: 'រូបសំណាក',
-                    selectStatue: 'ជ្រើសរើសរូបសំណាក',
-                    done: 'រួចរាល់',
-                    notYet: 'មិនទាន់',
-                    temperature: 'សីតុណ្ហភាព', // New translation key
+                    baptismStatus: 'ស្ថានភាពពិធីបុណ្យជ្រមុជទឹក',
+                    selectBaptismStatus: 'ជ្រើសរើសស្ថានភាពពិធីបុណ្យជ្រមុជទឹក',
+                    baptismDone: 'បាន​ទទួល​បុណ្យ​ជ្រមុជ​ទឹក',
+                    baptismNotYet: 'មិន​ទាន់​ទទួល​បុណ្យ​ជ្រមុជ​ទឹក',
                 },
             }
         };
@@ -789,7 +769,6 @@
         }
 
         // --- UI Update Functions ---
-        // Moved these functions to the top to ensure they are defined before being called
         function updateUI() {
             updateHeader();
             updateSidebar();
@@ -808,7 +787,7 @@
                 'members-nav-text': 'members',
                 'events-nav-text': 'events',
                 'reports-nav-text': 'reports',
-                'loading-text': 'loading',
+                // 'loading-text': 'loading', // Removed loading spinner
                 'dashboard-overview-title': 'dashboardOverview',
                 'dashboard-welcome-text': 'welcomeDashboard',
                 'total-members-title': 'totalMembers',
@@ -830,6 +809,7 @@
                 'table-name-header': 'name',
                 'table-gender-header': 'gender',
                 'table-phone-header': 'phone',
+                'table-baptism-status-header': 'baptismStatus',
                 'table-status-header': 'status',
                 'table-actions-header': 'actions',
                 'prev-page-btn': 'previous',
@@ -840,24 +820,24 @@
                 'event-name-header': 'eventName',
                 'event-date-header': 'eventDate',
                 'event-time-header': 'eventTime',
-                'event-location-header': 'eventLocation',
-                'event-service-header': 'eventService',
-                'event-team-header': 'eventTeam',
-                'event-description-header': 'eventDescription',
+                'event-location-header': 'location',
+                'event-service-header': 'service',
+                'event-team-header': 'team',
+                'event-description-header': 'description',
                 'event-actions-header': 'actions',
                 'reports-analytics-title': 'reportsAnalytics',
                 'generate-reports-text': 'generateReports',
                 'select-report-label': 'selectReport',
                 'select-report-placeholder': 'selectReport',
                 'report-membership-growth': 'membershipGrowthReport',
-                'report-event-attendance': 'eventAttendanceReport',
+                'report-event-attendance': 'Event Attendance Report',
                 'report-financial-summary': 'Financial Summary Report',
                 'report-monthly-comparison': 'Monthly Membership Comparison Report',
                 'generate-report-btn': 'Generate Report',
                 'profile': 'profile',
                 'settings': 'settings',
                 'logout': 'logout',
-                'loading': 'loading',
+                // 'loading': 'loading', // Removed loading spinner
                 'editMember': 'editMember',
                 'addMember': 'addMember',
                 'profilePhoto': 'profilePhoto',
@@ -893,18 +873,17 @@
                 'addEvent': 'Add Event',
                 'editEvent': 'Edit Event',
                 'noEventsFound': 'No events found.',
-                    'systemName': 'NewLife Fellowship',
-                    'reportTitleMonthlyComparison': 'Monthly Membership Comparison',
-                    'reportMonth': 'Month',
-                    'reportTotalMembers': 'Total Members',
-                    'reportNewMembers': 'New Members',
-                    'reportActiveMembers': 'Active Members',
-                    'search': 'Search',
-                    'statue-label': 'statue',
-                    'select-statue-placeholder': 'selectStatue',
-                    'statue-done': 'done',
-                    'statue-not-yet': 'notYet',
-                    'temperature-label': 'temperature', // New translation key
+                'systemName': 'NewLife Fellowship',
+                'reportTitleMonthlyComparison': 'Monthly Membership Comparison',
+                'reportMonth': 'Month',
+                'reportTotalMembers': 'Total Members',
+                'reportNewMembers': 'New Members',
+                'reportActiveMembers': 'Active Members',
+                'search': 'Search',
+                'baptism-status-label': 'baptismStatus',
+                'select-baptism-status-placeholder': 'selectBaptismStatus',
+                'baptism-done': 'baptismDone',
+                'baptism-not-yet': 'baptismNotYet',
             };
 
             for (const id in elementsToTranslate) {
@@ -914,7 +893,6 @@
                     if (element.tagName === 'INPUT' && element.placeholder) {
                         element.placeholder = getTranslation(translationKey);
                     } else if (element.tagName === 'OPTION') {
-                        // For options, update text content but be careful not to overwrite value
                         element.textContent = getTranslation(translationKey);
                     } else {
                         element.textContent = getTranslation(translationKey);
@@ -926,8 +904,11 @@
             const statusSelect = document.getElementById('status-filter-select');
             if (statusSelect) {
                 Array.from(statusSelect.options).forEach(option => {
-                    // Use a more specific translation key for options if needed, or just their value
-                    option.textContent = getTranslation(option.value.toLowerCase().replace(/[\s-]/g, ''));
+                    if (option.value === 'All') {
+                        option.textContent = getTranslation('allStatuses');
+                    } else {
+                        option.textContent = getTranslation(option.value.toLowerCase().replace(/[\s-]/g, ''));
+                    }
                 });
             }
 
@@ -935,29 +916,32 @@
             if (membersPerPageSelect) {
                 Array.from(membersPerPageSelect.options).forEach(option => {
                     if (option.value === 'all') {
-                        option.textContent = getTranslation('show') + ' ' + getTranslation('allStatuses');
+                        option.textContent = getTranslation('allStatuses');
                     } else {
                         option.textContent = getTranslation('show') + ' ' + option.value;
                     }
                 });
             }
 
-            const statueSelect = document.getElementById('member-statue');
-            if (statueSelect) {
-                Array.from(statueSelect.options).forEach(option => {
-                    // Special handling for "Select Statue" option
+            const baptismStatusSelect = document.getElementById('member-baptismStatus');
+            if (baptismStatusSelect) {
+                Array.from(baptismStatusSelect.options).forEach(option => {
                     if (option.value === '') {
-                        option.textContent = getTranslation('selectStatue');
+                        option.textContent = getTranslation('selectBaptismStatus');
                     } else {
-                        option.textContent = getTranslation(option.value.toLowerCase().replace(/[\s-]/g, '') || option.value); // Fallback to option.value
+                        if (option.value === 'Baptism done') {
+                            option.textContent = getTranslation('baptismDone');
+                        } else if (option.value === 'Baptism not yet') {
+                            option.textContent = getTranslation('baptismNotYet');
+                        } else {
+                            option.textContent = option.value;
+                        }
                     }
                 });
             }
         }
 
-
         function updateHeader() {
-            // Update theme button icon
             const themeToggleBtn = document.getElementById('theme-toggle');
             if (themeToggleBtn) {
                 themeToggleBtn.innerHTML = appState.theme === 'light' ?
@@ -969,7 +953,6 @@
                     </svg>`;
             }
 
-            // Update settings button active state
             const settingsButton = document.getElementById('settings-button');
             if (settingsButton) {
                 if (appState.activeSection === 'settings') {
@@ -1000,15 +983,7 @@
             });
         }
 
-        function showLoadingSpinner() {
-            document.getElementById('loading-spinner').classList.remove('hidden');
-            document.getElementById('main-content').classList.add('hidden');
-        }
-
-        function hideLoadingSpinner() {
-            document.getElementById('loading-spinner').classList.add('hidden');
-            document.getElementById('main-content').classList.remove('hidden');
-        }
+        // Removed showLoadingSpinner and hideLoadingSpinner as local operations are instant
 
         function renderActiveSection() {
             const sections = ['dashboard-section', 'members-section', 'events-section', 'reports-section', 'settings-section'];
@@ -1023,7 +998,6 @@
                 }
             });
 
-            // Render content for the active section
             switch (appState.activeSection) {
                 case 'dashboard':
                     renderDashboard();
@@ -1064,7 +1038,8 @@
             membersTableBody.innerHTML = ''; // Clear existing rows
 
             const filteredAndSearchedMembers = appState.members.filter(member => {
-                const matchesSearch = (member.name && member.name.toLowerCase().includes(appState.appliedSearchQuery.toLowerCase())) ||
+                const fullName = `${member.lastName || ''} ${member.firstName || ''}`.trim();
+                const matchesSearch = (fullName.toLowerCase().includes(appState.appliedSearchQuery.toLowerCase())) ||
                                       (member.gender && member.gender.toLowerCase().includes(appState.appliedSearchQuery.toLowerCase()));
                 const matchesStatus = appState.statusFilter === 'All' || (member.status && member.status === appState.statusFilter);
                 return matchesSearch && matchesStatus;
@@ -1075,10 +1050,11 @@
             const indexOfFirstMember = indexOfLastMember - appState.membersPerPage;
             const currentMembers = filteredAndSearchedMembers.slice(indexOfFirstMember, indexOfLastMember);
 
+            const numberOfColumns = 7; // Photo, Name, Gender, Phone, Baptism Status, Status, Actions
             if (currentMembers.length === 0) {
                 membersTableBody.innerHTML = `
                     <tr>
-                        <td colspan="6" class="px-4 py-3 whitespace-nowrap text-center text-sm text-gray-500 dark:text-gray-400">
+                        <td colspan="${numberOfColumns}" class="px-4 py-3 whitespace-nowrap text-center text-sm text-gray-500 dark:text-gray-400">
                             ${getTranslation('noMembersFound')}
                         </td>
                     </tr>
@@ -1093,7 +1069,7 @@
                     photoCell.innerHTML = `
                         <button class="focus:outline-none view-photo-btn" data-photo-url="${member.photo || 'https://placehold.co/400x400/cccccc/ffffff?text=Image+Not+Available'}">
                             ${member.photo ?
-                                `<img src="${member.photo}" alt="${member.name}" class="h-10 w-10 rounded-full object-cover max-w-full" onerror="this.onerror=null;this.src='https://placehold.co/50x50/cccccc/ffffff?text=N/A';" />` :
+                                `<img src="${member.photo}" alt="${member.firstName} ${member.lastName}" class="h-10 w-10 rounded-full object-cover max-w-full" onerror="this.onerror=null;this.src='https://placehold.co/50x50/cccccc/ffffff?text=N/A';" />` :
                                 `<div class="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center text-gray-500 dark:text-gray-300 text-xs">No Photo</div>`
                             }
                         </button>
@@ -1103,7 +1079,7 @@
                     nameCell.className = "px-4 py-3 whitespace-nowrap";
                     nameCell.innerHTML = `
                         <button class="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline focus:outline-none view-member-details-btn" data-member-id="${member.id}">
-                            ${member.name || ''}
+                            ${member.lastName || ''} ${member.firstName || ''}
                         </button>
                     `;
 
@@ -1114,6 +1090,10 @@
                     const phoneCell = row.insertCell();
                     phoneCell.className = "px-4 py-3 whitespace-nowrap";
                     phoneCell.textContent = member.phone || '';
+
+                    const baptismStatusCell = row.insertCell();
+                    baptismStatusCell.className = "px-4 py-3 whitespace-nowrap";
+                    baptismStatusCell.textContent = getTranslation(member.baptismStatus?.toLowerCase().replace(/[\s-]/g, '') || '') || member.baptismStatus || '';
 
                     const statusCell = row.insertCell();
                     statusCell.className = "px-4 py-3 whitespace-nowrap";
@@ -1141,7 +1121,6 @@
                 });
             }
 
-            // Render pagination
             const paginationNav = document.getElementById('members-pagination');
             const paginationNumbersDiv = document.getElementById('pagination-numbers');
             if (totalPages > 1) {
@@ -1215,12 +1194,10 @@
             const generatedReportTitle = document.getElementById('generated-report-title');
             const generatedReportContent = document.getElementById('generated-report-content');
 
-            // Enable/disable generate button based on selection
             generateReportBtn.disabled = !reportSelect.value;
             generateReportBtn.classList.toggle('opacity-50', !reportSelect.value);
             generateReportBtn.classList.toggle('cursor-not-allowed', !reportSelect.value);
 
-            // Hide report area if no report is selected or generated
             if (!reportSelect.value || !appState.generatedReportData) {
                 generatedReportArea.classList.add('hidden');
                 return;
@@ -1275,35 +1252,28 @@
         }
 
         function updateModals() {
-            // This function ensures modals reflect the latest appState,
-            // though their visibility is primarily controlled by showModal/hideModal.
-            // It's mainly for re-populating forms if editingMember/editingEvent changes.
             if (document.getElementById('member-modal').classList.contains('hidden')) {
-                // If modal is hidden, ensure editing state is cleared
                 appState.editingMember = null;
             }
             if (document.getElementById('event-modal').classList.contains('hidden')) {
                 appState.editingEvent = null;
             }
-            // Re-translate modal titles/buttons if they are open
             translateElements();
         }
 
         function populateMemberForm(member) {
-            // Get all form elements by their IDs directly
             const memberFirstNameInput = document.getElementById('member-firstName');
             const memberLastNameInput = document.getElementById('member-lastName');
             const memberGenderSelect = document.getElementById('member-gender');
             const memberDateOfBirthInput = document.getElementById('member-dateOfBirth');
             const memberMemberClassSelect = document.getElementById('member-memberClass');
-            const memberStatueSelect = document.getElementById('member-statue');
+            const memberBaptismStatusSelect = document.getElementById('member-baptismStatus');
             const memberFromInput = document.getElementById('member-from');
             const memberServiceSelect = document.getElementById('member-service');
             const memberPhoneNumberInput = document.getElementById('member-phoneNumber');
             const memberEmergencyNumberInput = document.getElementById('member-emergencyNumber');
             const memberFacebookInput = document.getElementById('member-facebook');
             const memberTelegramInput = document.getElementById('member-telegram');
-            const memberTemperatureInput = document.getElementById('member-temperature'); // New temperature input
 
             const photoPreview = document.getElementById('photo-preview');
             const photoPlaceholder = document.getElementById('photo-placeholder');
@@ -1312,37 +1282,43 @@
                 document.getElementById('member-modal-title').textContent = getTranslation('editMember');
                 document.getElementById('member-modal-save-btn').textContent = getTranslation('saveChanges');
 
-                // Populate fields if elements exist
                 if (memberFirstNameInput) memberFirstNameInput.value = member.firstName || '';
                 if (memberLastNameInput) memberLastNameInput.value = member.lastName || '';
                 if (memberGenderSelect) memberGenderSelect.value = member.gender || '';
                 if (memberDateOfBirthInput) memberDateOfBirthInput.value = member.dateOfBirth || '';
                 if (memberMemberClassSelect) memberMemberClassSelect.value = member.memberClass || '';
-                if (memberStatueSelect) memberStatueSelect.value = member.statue || '';
+                if (memberBaptismStatusSelect) memberBaptismStatusSelect.value = member.baptismStatus || '';
                 if (memberFromInput) memberFromInput.value = member.from || '';
                 if (memberServiceSelect) memberServiceSelect.value = member.service || '';
                 if (memberPhoneNumberInput) memberPhoneNumberInput.value = member.phone || '';
                 if (memberEmergencyNumberInput) memberEmergencyNumberInput.value = member.emergencyNumber || '';
                 if (memberFacebookInput) memberFacebookInput.value = member.facebook || '';
                 if (memberTelegramInput) memberTelegramInput.value = member.telegram || '';
-                if (memberTemperatureInput) memberTemperatureInput.value = member.temperature || ''; // Populate temperature
+
+                if (member.photo) {
+                    photoPreview.src = member.photo;
+                    photoPreview.classList.remove('hidden');
+                    photoPlaceholder.classList.add('hidden');
+                } else {
+                    photoPreview.src = '';
+                    photoPreview.classList.add('hidden');
+                    photoPlaceholder.classList.remove('hidden');
+                }
             } else {
                 document.getElementById('member-modal-title').textContent = getTranslation('addMember');
                 document.getElementById('member-modal-save-btn').textContent = getTranslation('addMember');
-                // Clear all form fields
                 if (memberFirstNameInput) memberFirstNameInput.value = '';
                 if (memberLastNameInput) memberLastNameInput.value = '';
                 if (memberGenderSelect) memberGenderSelect.value = '';
                 if (memberDateOfBirthInput) memberDateOfBirthInput.value = '';
                 if (memberMemberClassSelect) memberMemberClassSelect.value = '';
-                if (memberStatueSelect) memberStatueSelect.value = '';
+                if (memberBaptismStatusSelect) memberBaptismStatusSelect.value = '';
                 if (memberFromInput) memberFromInput.value = '';
                 if (memberServiceSelect) memberServiceSelect.value = '';
                 if (memberPhoneNumberInput) memberPhoneNumberInput.value = '';
                 if (memberEmergencyNumberInput) memberEmergencyNumberInput.value = '';
                 if (memberFacebookInput) memberFacebookInput.value = '';
                 if (memberTelegramInput) memberTelegramInput.value = '';
-                if (memberTemperatureInput) memberTemperatureInput.value = ''; // Clear temperature
 
                 photoPreview.src = '';
                 photoPreview.classList.add('hidden');
@@ -1413,12 +1389,8 @@
                     <p class="mt-1 text-blue-600 dark:text-blue-400 break-words">${member.telegram || ''}</p>
                 </div>
                 <div>
-                    <p class="text-sm font-medium text-gray-700 dark:text-gray-300">${getTranslation('statue')}:</p>
-                    <p class="mt-1 text-gray-900 dark:text-gray-100">${getTranslation(member.statue?.toLowerCase().replace(/[\s-]/g, '') || '') || member.statue || ''}</p>
-                </div>
-                <div>
-                    <p class="text-sm font-medium text-gray-700 dark:text-gray-300">${getTranslation('temperature')}:</p>
-                    <p class="mt-1 text-gray-900 dark:text-gray-100">${member.temperature ? `${member.temperature}°C` : ''}</p>
+                    <p class="text-sm font-medium text-gray-700 dark:text-gray-300" id="baptism-status-display-label">${getTranslation('baptismStatus')}:</p>
+                    <p class="mt-1 text-gray-900 dark:text-gray-100">${getTranslation(member.baptismStatus?.toLowerCase().replace(/[\s-]/g, '') || '') || member.baptismStatus || ''}</p>
                 </div>
             `;
             detailsContent.innerHTML = html;
@@ -1439,217 +1411,160 @@
             } else {
                 document.getElementById('event-modal-title').textContent = getTranslation('addEvent');
                 document.getElementById('event-modal-save-btn').textContent = getTranslation('addEvent');
-                form.reset(); // Clear all form fields
+                form.reset();
             }
         }
 
-        // --- Data Operations (Firestore) ---
-        async function addMember(newMemberData) {
-            showLoadingSpinner();
-            try {
-                if (!db || !appState.userId) throw new Error("Firestore not initialized or user not authenticated.");
-                await addDoc(membersCollectionRef, newMemberData);
-            } catch (error) {
-                console.error("Error adding member:", error);
-                alert("Failed to add member. Please try again.");
-            } finally {
-                hideLoadingSpinner();
-            }
+        // --- Local Storage Functions ---
+        function generateUniqueId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
         }
 
-        async function editMember(memberId, updatedMemberData) {
-            showLoadingSpinner();
+        function loadData() {
             try {
-                if (!db || !appState.userId) throw new Error("Firestore not initialized or user not authenticated.");
-                const memberDocRef = doc(db, `${appState.privateCollectionPath}/members`, memberId);
-                await setDoc(memberDocRef, updatedMemberData, { merge: true });
-            } catch (error) {
-                console.error("Error updating member:", error);
-                alert("Failed to update member. Please try again.");
-            } finally {
-                hideLoadingSpinner();
-            }
-        }
+                const storedMembers = localStorage.getItem('churchMembers');
+                const storedEvents = localStorage.getItem('churchEvents');
 
-        async function deleteMember(memberId) {
-            showLoadingSpinner();
-            try {
-                if (!db || !appState.userId) throw new Error("Firestore not initialized or user not authenticated.");
-                const memberDocRef = doc(db, `${appState.privateCollectionPath}/members`, memberId);
-                await deleteDoc(memberDocRef);
-            } catch (error) {
-                console.error("Error deleting member:", error);
-                alert("Failed to delete member. Please try again.");
-            } finally {
-                hideLoadingSpinner();
-            }
-        }
-
-        async function addEvent(newEventData) {
-            showLoadingSpinner();
-            try {
-                if (!db || !appState.userId) throw new Error("Firestore not initialized or user not authenticated.");
-                await addDoc(eventsCollectionRef, newEventData);
-            } catch (error) {
-                console.error("Error adding event:", error);
-                alert("Failed to add event. Please try again.");
-            } finally {
-                hideLoadingSpinner();
-            }
-        }
-
-        async function editEvent(eventId, updatedEventData) {
-            showLoadingSpinner();
-            try {
-                if (!db || !appState.userId) throw new Error("Firestore not initialized or user not authenticated.");
-                const eventDocRef = doc(db, `${appState.privateCollectionPath}/events`, eventId);
-                await setDoc(eventDocRef, updatedEventData, { merge: true });
-            } catch (error) {
-                console.error("Error updating event:", error);
-                alert("Failed to update event. Please try again.");
-            } finally {
-                hideLoadingSpinner();
-            }
-        }
-
-        // --- Firebase Initialization and Auth ---
-        // Explicitly initialize variables to null or appropriate defaults
-        let db = null;
-        let auth = null;
-        let membersCollectionRef = null;
-        let eventsCollectionRef = null;
-
-        console.log("Script started: Church Management System"); // Added for debugging
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                // Firebase config is passed as a global variable by the Canvas environment
-                let rawFirebaseConfig = '{}';
-                if (typeof __firebase_config !== 'undefined') {
-                    rawFirebaseConfig = __firebase_config;
-                }
-                const firebaseConfig = JSON.parse(rawFirebaseConfig);
-
-                let rawAppId = 'default-app-id';
-                if (typeof __app_id !== 'undefined') {
-                    rawAppId = __app_id;
-                }
-                const appId = rawAppId;
-
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-
-                // Set up auth state listener
-                onAuthStateChanged(auth, async (user) => {
-                    if (user) {
-                        appState.userId = user.uid;
-                    } else {
-                        let initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-                        if (initialAuthToken) {
-                            try {
-                                await signInWithCustomToken(auth, initialAuthToken);
-                                appState.userId = auth.currentUser.uid;
-                            } catch (error) {
-                                console.error("Error signing in with custom token:", error);
-                                await signInAnonymously(auth);
-                                appState.userId = auth.currentUser.uid;
-                            }
-                        } else {
-                            await signInAnonymously(auth);
-                            appState.userId = auth.currentUser.uid;
+                if (storedMembers) {
+                    appState.members = JSON.parse(storedMembers);
+                } else {
+                    appState.members = [
+                        {
+                            id: generateUniqueId(), firstName: 'John', lastName: 'Doe', gender: 'Male', dateOfBirth: '1990-01-15',
+                            memberClass: 'Discipleship', status: 'Active', from: 'Phnom Penh', service: 'Choir',
+                            phone: '012345678', emergencyNumber: '098765432', facebook: 'facebook.com/johndoe',
+                            telegram: '@johndoe', baptismStatus: 'Baptism done', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=JD'
+                        },
+                        {
+                            id: generateUniqueId(), firstName: 'Maly', lastName: 'Chan', gender: 'Female', dateOfBirth: '1992-05-20',
+                            memberClass: 'Changing Life', status: 'New believer', from: 'Siem Reap', service: 'Usher',
+                            phone: '010987654', emergencyNumber: '011234567', facebook: 'facebook.com/malychan',
+                            telegram: '@malychan', baptismStatus: 'Baptism not yet', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=MC'
+                        },
+                        {
+                            id: generateUniqueId(), firstName: 'Sok', lastName: 'Ly', gender: 'Male', dateOfBirth: '1985-11-01',
+                            memberClass: 'Life Guidance Class', status: 'Active', from: 'Battambang', service: 'Service 1',
+                            phone: '015123456', emergencyNumber: '016789012', facebook: 'facebook.com/sokly',
+                            telegram: '@sokly', baptismStatus: 'Baptism done', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=SL'
+                        },
+                        {
+                            id: generateUniqueId(), firstName: 'Dara', lastName: 'Kim', gender: 'Female', dateOfBirth: '1998-03-25',
+                            memberClass: 'SOM', status: 'Cell group', from: 'Kandal', service: 'Service 2',
+                            phone: '077888999', emergencyNumber: '088777666', facebook: 'facebook.com/darakim',
+                            telegram: '@darakim', baptismStatus: 'Baptism done', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=DK'
+                        },
+                        {
+                            id: generateUniqueId(), firstName: 'Vannak', lastName: 'Chea', gender: 'Male', dateOfBirth: '2000-07-07',
+                            memberClass: 'Leadership', status: 'Visitor', from: 'Kampong Cham', service: 'Other',
+                            phone: '069111222', emergencyNumber: '096333444', facebook: 'facebook.com/vannakc',
+                            telegram: '@vannakc', baptismStatus: 'Baptism not yet', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=VC'
+                        },
+                        {
+                            id: generateUniqueId(), firstName: 'Srey', lastName: 'Mom', gender: 'Female', dateOfBirth: '1995-02-10',
+                            memberClass: 'Discipleship', status: 'Active', from: 'Pursat', service: 'Choir',
+                            phone: '012111222', emergencyNumber: '098111222', facebook: 'facebook.com/sreymom',
+                            telegram: '@sreymom', baptismStatus: 'Baptism done', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=SM'
+                        },
+                        {
+                            id: generateUniqueId(), firstName: 'Chann', lastName: 'Phal', gender: 'Male', dateOfBirth: '1988-09-05',
+                            memberClass: 'Life Guidance Class', status: 'Active', from: 'Takeo', service: 'Usher',
+                            phone: '010222333', emergencyNumber: '011333444', facebook: 'facebook.com/channphal',
+                            telegram: '@channphal', baptismStatus: 'Baptism done', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=CP'
+                        },
+                        {
+                            id: generateUniqueId(), firstName: 'Leakhena', lastName: 'Pov', gender: 'Female', dateOfBirth: '1991-04-22',
+                            memberClass: 'Changing Life', status: 'New believer', from: 'Kampong Speu', service: 'Service 1',
+                            phone: '015444555', emergencyNumber: '016555666', facebook: 'facebook.com/leakhenapov',
+                            telegram: '@leakhenapov', baptismStatus: 'Baptism not yet', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=LP'
+                        },
+                        {
+                            id: generateUniqueId(), firstName: 'Rithy', lastName: 'Sok', gender: 'Male', dateOfBirth: '1979-11-30',
+                            memberClass: 'Leadership', status: 'Cell group', from: 'Prey Veng', service: 'Service 2',
+                            phone: '077999888', emergencyNumber: '088666555', facebook: 'facebook.com/rithysok',
+                            telegram: '@rithysok', baptismStatus: 'Baptism done', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=RS'
+                        },
+                        {
+                            id: generateUniqueId(), firstName: 'Sovann', lastName: 'Roth', gender: 'Female', dateOfBirth: '2001-08-18',
+                            memberClass: 'SOM', status: 'Visitor', from: 'Svay Rieng', service: 'Other',
+                            phone: '069777888', emergencyNumber: '096999000', facebook: 'facebook.com/sovannroth',
+                            telegram: '@sovannroth', baptismStatus: 'Baptism not yet', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=SR'
                         }
-                    }
-                    appState.privateCollectionPath = `artifacts/${appId}/users/${appState.userId}`;
-                    membersCollectionRef = collection(db, `${appState.privateCollectionPath}/members`);
-                    eventsCollectionRef = collection(db, `${appState.privateCollectionPath}/events`);
-                    appState.isAuthReady = true;
+                    ];
+                    saveData();
+                }
 
-                    // --- NEW LOGIC FOR DUMMY DATA POPULATION ---
-                    if (!appState.hasCheckedForInitialMembers && appState.userId) {
-                        const membersSnapshot = await getDocs(membersCollectionRef);
-                        if (membersSnapshot.empty) {
-                            console.log("Firestore members collection is empty. Populating with dummy data.");
-                            const dummyMembers = [
-                                {
-                                    firstName: 'John', lastName: 'Doe', name: 'John Doe', gender: 'Male', dateOfBirth: '1990-01-15',
-                                    memberClass: 'Discipleship', status: 'Active', from: 'Phnom Penh', service: 'Choir',
-                                    phone: '012345678', emergencyNumber: '098765432', facebook: 'facebook.com/johndoe',
-                                    telegram: '@johndoe', statue: 'Done', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=JD', temperature: 36.5
-                                },
-                                {
-                                    firstName: 'Maly', lastName: 'Chan', name: 'Maly Chan', gender: 'Female', dateOfBirth: '1992-05-20',
-                                    memberClass: 'Changing Life', status: 'New believer', from: 'Siem Reap', service: 'Usher',
-                                    phone: '010987654', emergencyNumber: '011234567', facebook: 'facebook.com/malychan',
-                                    telegram: '@malychan', statue: 'Not yet', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=MC', temperature: 37.0
-                                },
-                                {
-                                    firstName: 'Sok', lastName: 'Ly', name: 'Sok Ly', gender: 'Male', dateOfBirth: '1985-11-01',
-                                    memberClass: 'Life Guidance Class', status: 'Active', from: 'Battambang', service: 'Service 1',
-                                    phone: '015123456', emergencyNumber: '016789012', facebook: 'facebook.com/sokly',
-                                    telegram: '@sokly', statue: 'Done', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=SL', temperature: 36.8
-                                },
-                                {
-                                    firstName: 'Dara', lastName: 'Kim', name: 'Dara Kim', gender: 'Female', dateOfBirth: '1998-03-25',
-                                    memberClass: 'SOM', status: 'Cell group', from: 'Kandal', service: 'Service 2',
-                                    phone: '077888999', emergencyNumber: '088777666', facebook: 'facebook.com/darakim',
-                                    telegram: '@darakim', statue: 'Done', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=DK', temperature: 36.2
-                                },
-                                {
-                                    firstName: 'Vannak', lastName: 'Chea', name: 'Vannak Chea', gender: 'Male', dateOfBirth: '2000-07-07',
-                                    memberClass: 'Leadership', status: 'Visitor', from: 'Kampong Cham', service: 'Other',
-                                    phone: '069111222', emergencyNumber: '096333444', facebook: 'facebook.com/vannakc',
-                                    telegram: '@vannakc', statue: 'Not yet', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=VC', temperature: 37.1
-                                },
-                                {
-                                    firstName: 'Srey', lastName: 'Mom', name: 'Srey Mom', gender: 'Female', dateOfBirth: '1995-02-10',
-                                    memberClass: 'Discipleship', status: 'Active', from: 'Pursat', service: 'Choir',
-                                    phone: '012111222', emergencyNumber: '098111222', facebook: 'facebook.com/sreymom',
-                                    telegram: '@sreymom', statue: 'Done', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=SM', temperature: 36.7
-                                },
-                                {
-                                    firstName: 'Chann', lastName: 'Phal', name: 'Chann Phal', gender: 'Male', dateOfBirth: '1988-09-05',
-                                    memberClass: 'Life Guidance Class', status: 'Active', from: 'Takeo', service: 'Usher',
-                                    phone: '010222333', emergencyNumber: '011333444', facebook: 'facebook.com/channphal',
-                                    telegram: '@channphal', statue: 'Done', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=CP', temperature: 36.9
-                                },
-                                {
-                                    firstName: 'Leakhena', lastName: 'Pov', name: 'Leakhena Pov', gender: 'Female', dateOfBirth: '1991-04-22',
-                                    memberClass: 'Changing Life', status: 'New believer', from: 'Kampong Speu', service: 'Service 1',
-                                    phone: '015444555', emergencyNumber: '016555666', facebook: 'facebook.com/leakhenapov',
-                                    telegram: '@leakhenapov', statue: 'Not yet', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=LP', temperature: 37.2
-                                },
-                                {
-                                    firstName: 'Rithy', lastName: 'Sok', name: 'Rithy Sok', gender: 'Male', dateOfBirth: '1979-11-30',
-                                    memberClass: 'Leadership', status: 'Cell group', from: 'Prey Veng', service: 'Service 2',
-                                    phone: '077999888', emergencyNumber: '088666555', facebook: 'facebook.com/rithysok',
-                                    telegram: '@rithysok', statue: 'Done', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=RS', temperature: 36.4
-                                },
-                                {
-                                    firstName: 'Sovann', lastName: 'Roth', name: 'Sovann Roth', gender: 'Female', dateOfBirth: '2001-08-18',
-                                    memberClass: 'SOM', status: 'Visitor', from: 'Svay Rieng', service: 'Other',
-                                    phone: '069777888', emergencyNumber: '096999000', facebook: 'facebook.com/sovannroth',
-                                    telegram: '@sovannroth', statue: 'Not yet', photo: 'https://placehold.co/50x50/cccccc/ffffff?text=SR', temperature: 37.0
-                                }
-                            ];
-                            for (const member of dummyMembers) {
-                                await addDoc(membersCollectionRef, member);
-                            }
+                if (storedEvents) {
+                    appState.events = JSON.parse(storedEvents);
+                } else {
+                    appState.events = [
+                        {
+                            id: generateUniqueId(), name: 'Sunday Service', date: '2025-07-27', time: '09:00', location: 'Main Hall',
+                            service: 'Worship', team: 'Pastoral Team', description: 'Weekly Sunday worship service.'
+                        },
+                        {
+                            id: generateUniqueId(), name: 'Youth Group Meeting', date: '2025-07-28', time: '18:00', location: 'Youth Room',
+                            service: 'Youth Ministry', team: 'Youth Leaders', description: 'Weekly meeting for youth group members.'
                         }
-                        appState.hasCheckedForInitialMembers = true; // Mark as checked
-                    }
-                    // --- END NEW LOGIC ---
-
-                    hideLoadingSpinner();
-                    setupFirestoreListeners(); // Now set up the real-time listener
-                    updateUI(); // Initial UI render after auth and potential dummy data population
-                });
+                    ];
+                    saveData();
+                }
             } catch (error) {
-                console.error("Failed to initialize Firebase:", error);
-                appState.isAuthReady = true; // Mark as ready even on error to avoid infinite loading
-                hideLoadingSpinner();
+                console.error("Error loading data from local storage:", error);
+                appState.members = [];
+                appState.events = [];
+            }
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem('churchMembers', JSON.stringify(appState.members));
+                localStorage.setItem('churchEvents', JSON.stringify(appState.events));
+            } catch (error) {
+                console.error("Error saving data to local storage:", error);
+            }
+        }
+
+        async function addMemberLocal(newMemberData) {
+            newMemberData.id = generateUniqueId();
+            appState.members.push(newMemberData);
+            saveData();
+            updateUI();
+        }
+
+        async function editMemberLocal(memberId, updatedMemberData) {
+            const index = appState.members.findIndex(m => m.id === memberId);
+            if (index !== -1) {
+                appState.members[index] = { ...appState.members[index], ...updatedMemberData };
+                saveData();
                 updateUI();
             }
+        }
+
+        async function deleteMemberLocal(memberId) {
+            appState.members = appState.members.filter(m => m.id !== memberId);
+            saveData();
+            updateUI();
+        }
+
+        async function addEventLocal(newEventData) {
+            newEventData.id = generateUniqueId();
+            appState.events.push(newEventData);
+            saveData();
+            updateUI();
+        }
+
+        async function editEventLocal(eventId, updatedEventData) {
+            const index = appState.events.findIndex(e => e.id === eventId);
+            if (index !== -1) {
+                appState.events[index] = { ...appState.events[index], ...updatedEventData };
+                saveData();
+                updateUI();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            loadData(); // Load data from local storage on startup
+            updateUI(); // Initial UI render
 
             // Dynamically load XLSX library
             const loadScript = (src, id, onloadCallback) => {
@@ -1669,29 +1584,6 @@
             });
         });
 
-        function setupFirestoreListeners() {
-            if (appState.db && appState.userId) {
-                // Members listener
-                onSnapshot(membersCollectionRef, (snapshot) => {
-                    appState.members = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    appState.isLoading = false;
-                    updateUI();
-                }, (error) => {
-                    console.error("Error fetching members:", error);
-                    appState.isLoading = false;
-                    updateUI();
-                });
-
-                // Events listener
-                onSnapshot(eventsCollectionRef, (snapshot) => {
-                    appState.events = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                    updateUI();
-                }, (error) => {
-                    console.error("Error fetching events:", error);
-                });
-            }
-        }
-
         // --- Event Listeners ---
         document.getElementById('theme-toggle').addEventListener('click', () => {
             appState.theme = appState.theme === 'light' ? 'dark' : 'light';
@@ -1700,17 +1592,15 @@
             document.body.classList.toggle('text-gray-100', appState.theme === 'dark');
             document.body.classList.toggle('bg-gray-100', appState.theme === 'light');
             document.body.classList.toggle('text-gray-900', appState.theme === 'light');
-            updateHeader(); // Update icon
+            updateHeader();
         });
 
-        // Sidebar navigation
         document.getElementById('nav-dashboard').addEventListener('click', () => { appState.activeSection = 'dashboard'; updateUI(); });
         document.getElementById('nav-members').addEventListener('click', () => { appState.activeSection = 'members'; updateUI(); });
         document.getElementById('nav-events').addEventListener('click', () => { appState.activeSection = 'events'; updateUI(); });
         document.getElementById('nav-reports').addEventListener('click', () => { appState.activeSection = 'reports'; updateUI(); });
         document.getElementById('settings-button').addEventListener('click', () => { appState.activeSection = 'settings'; updateUI(); });
 
-        // Dashboard quick actions
         document.getElementById('add-new-member-dashboard-btn').addEventListener('click', () => {
             appState.activeSection = 'members';
             appState.editingMember = null;
@@ -1726,20 +1616,19 @@
             showModal('event-modal');
         });
 
-        // Members section actions
         document.getElementById('execute-search-button').addEventListener('click', () => {
             appState.appliedSearchQuery = document.getElementById('member-search-input').value;
-            appState.currentPage = 1; // Reset to first page on new search
+            appState.currentPage = 1;
             renderMembers();
         });
         document.getElementById('status-filter-select').addEventListener('change', (e) => {
             appState.statusFilter = e.target.value;
-            appState.currentPage = 1; // Reset to first page on new filter
+            appState.currentPage = 1;
             renderMembers();
         });
         document.getElementById('members-per-page-select').addEventListener('change', (e) => {
             appState.membersPerPage = e.target.value === 'all' ? appState.members.length : Number(e.target.value);
-            appState.currentPage = 1; // Reset to first page on new page size
+            appState.currentPage = 1;
             renderMembers();
         });
         document.getElementById('add-new-member-btn').addEventListener('click', () => {
@@ -1757,7 +1646,8 @@
                 try {
                     if (typeof window.XLSX === 'undefined') {
                         console.error("XLSX library not loaded.");
-                        alert("Excel import is not ready. Please try again or refresh the page.");
+                        // Replaced alert with console.log as per instructions
+                        console.log("Excel import is not ready. Please try again or refresh the page.");
                         return;
                     }
 
@@ -1766,37 +1656,28 @@
                     const sheetName = workbook.SheetNames[0];
                     const worksheet = window.XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-                    if (!db || !appState.userId) {
-                        console.error("Firestore not initialized or user not authenticated.");
-                        alert("Firestore not ready. Please try again.");
-                        return;
-                    }
-
                     for (let row of worksheet) {
                         const newMemberData = {
-                            name: row['Name'] || `${row['First Name'] || ''} ${row['Last Name'] || ''}`.trim(),
-                            status: row['Status'] || 'Active',
-                            gender: row['Gender'] || 'Unknown',
-                            phone: row['Phone Number'] || '',
-                            service: row['Service'] || 'Other',
-                            photo: row['Photo'] || '',
-                            facebook: row['Facebook'] || '',
-                            telegram: row['Telegram'] || '',
-                            lastName: row['Last Name'] || '',
                             firstName: row['First Name'] || '',
+                            lastName: row['Last Name'] || '',
+                            gender: row['Gender'] || 'Unknown',
                             dateOfBirth: row['Date of Birth'] || '',
                             memberClass: row['Class'] || '',
+                            baptismStatus: row['Baptism Status'] || '',
                             from: row['From'] || '',
+                            service: row['Service'] || 'Other',
+                            phone: row['Phone Number'] || '',
                             emergencyNumber: row['Emergency Number'] || '',
-                            statue: row['Statue'] || '',
-                            temperature: row['Temperature'] || '', // Include temperature from Excel
+                            facebook: row['Facebook'] || '',
+                            telegram: row['Telegram'] || '',
+                            photo: row['Photo'] || '',
                         };
-                        await addDoc(membersCollectionRef, newMemberData);
+                        await addMemberLocal(newMemberData); // Use local add function
                     }
-                    alert('Members imported successfully!');
+                    console.log('Members imported successfully!');
                 } catch (error) {
                     console.error('Error importing Excel file:', error);
-                    alert('Failed to import Excel file. Please ensure it is a valid Excel format and columns match expected headers.');
+                    console.log('Failed to import Excel file. Please ensure it is a valid Excel format and columns match expected headers.');
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -1805,28 +1686,27 @@
         document.getElementById('export-excel-btn').addEventListener('click', () => {
             if (typeof window.XLSX === 'undefined') {
                 console.error("XLSX library not loaded.");
-                alert("Excel export is not ready. Please try again or refresh the page.");
+                console.log("Excel export is not ready. Please try again or refresh the page.");
                 return;
             }
 
-            const headers = ["ID", "Name", "Status", "Gender", "Phone", "Service", "Facebook", "Telegram", "Last Name", "First Name", "Date of Birth", "Class", "From", "Emergency Number", "Statue", "Temperature"]; // Added Temperature
+            const headers = ["ID", "First Name", "Last Name", "Gender", "Phone", "Baptism Status", "Status", "Service", "Facebook", "Telegram", "Date of Birth", "Class", "From", "Emergency Number", "Photo URL"];
             const rows = appState.members.map(member => [
                 member.id,
-                member.name,
-                member.status,
+                member.firstName,
+                member.lastName,
                 member.gender,
                 member.phone,
+                member.baptismStatus,
+                member.status,
                 member.service,
                 member.facebook,
                 member.telegram,
-                member.lastName,
-                member.firstName,
                 member.dateOfBirth,
                 member.memberClass,
                 member.from,
                 member.emergencyNumber,
-                member.statue,
-                member.temperature, // Added temperature to export
+                member.photo,
             ]);
 
             const worksheet = window.XLSX.utils.aoa_to_sheet([headers, ...rows]);
@@ -1835,15 +1715,14 @@
             window.XLSX.writeFile(workbook, "church_members.xlsx");
         });
 
-
-        // Pagination buttons
         document.getElementById('prev-page-btn').addEventListener('click', () => {
             appState.currentPage = Math.max(1, appState.currentPage - 1);
             renderMembers();
         });
         document.getElementById('next-page-btn').addEventListener('click', () => {
             const filteredAndSearchedMembers = appState.members.filter(member => {
-                const matchesSearch = (member.name && member.name.toLowerCase().includes(appState.appliedSearchQuery.toLowerCase())) ||
+                const fullName = `${member.lastName || ''} ${member.firstName || ''}`.trim();
+                const matchesSearch = (fullName.toLowerCase().includes(appState.appliedSearchQuery.toLowerCase())) ||
                                       (member.gender && member.gender.toLowerCase().includes(appState.appliedSearchQuery.toLowerCase()));
                 const matchesStatus = appState.statusFilter === 'All' || (member.status && member.status === appState.statusFilter);
                 return matchesSearch && matchesStatus;
@@ -1853,7 +1732,6 @@
             renderMembers();
         });
 
-        // Event delegation for dynamically added member table buttons
         document.getElementById('members-table-body').addEventListener('click', (e) => {
             if (e.target.closest('.edit-member-btn')) {
                 const memberId = e.target.closest('.edit-member-btn').dataset.memberId;
@@ -1863,7 +1741,7 @@
             } else if (e.target.closest('.delete-member-btn')) {
                 const memberId = e.target.closest('.delete-member-btn').dataset.memberId;
                 appState.memberToDelete = appState.members.find(m => m.id === memberId);
-                document.getElementById('delete-confirmation-text').textContent = getTranslation('deleteConfirmation').replace('{memberName}', appState.memberToDelete.name);
+                document.getElementById('delete-confirmation-text').textContent = getTranslation('deleteConfirmation').replace('{memberName}', `${appState.memberToDelete.lastName || ''} ${appState.memberToDelete.firstName || ''}`.trim());
                 showModal('delete-confirm-modal');
             } else if (e.target.closest('.view-member-details-btn')) {
                 const memberId = e.target.closest('.view-member-details-btn').dataset.memberId;
@@ -1877,27 +1755,23 @@
             }
         });
 
-        // Member Modal form submission
         document.getElementById('member-form').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const form = e.target;
             const formData = {
                 firstName: document.getElementById('member-firstName').value,
                 lastName: document.getElementById('member-lastName').value,
                 gender: document.getElementById('member-gender').value,
                 dateOfBirth: document.getElementById('member-dateOfBirth').value,
                 memberClass: document.getElementById('member-memberClass').value,
-                statue: document.getElementById('member-statue').value,
+                baptismStatus: document.getElementById('member-baptismStatus').value,
                 from: document.getElementById('member-from').value,
                 service: document.getElementById('member-service').value,
                 phone: document.getElementById('member-phoneNumber').value,
                 emergencyNumber: document.getElementById('member-emergencyNumber').value,
                 facebook: document.getElementById('member-facebook').value,
                 telegram: document.getElementById('member-telegram').value,
-                temperature: document.getElementById('member-temperature').value, // Get temperature value
                 status: appState.editingMember ? appState.editingMember.status : 'Active',
             };
-            formData.name = `${formData.firstName} ${formData.lastName}`.trim();
 
             const photoFile = document.getElementById('member-photo-upload').files[0];
             if (photoFile) {
@@ -1905,9 +1779,9 @@
                 reader.onloadend = async () => {
                     formData.photo = reader.result;
                     if (appState.editingMember) {
-                        await editMember(appState.editingMember.id, formData);
+                        await editMemberLocal(appState.editingMember.id, formData);
                     } else {
-                        await addMember(formData);
+                        await addMemberLocal(formData);
                     }
                     hideModal('member-modal');
                 };
@@ -1915,52 +1789,46 @@
             } else {
                 formData.photo = appState.editingMember ? appState.editingMember.photo : '';
                 if (appState.editingMember) {
-                    await editMember(appState.editingMember.id, formData);
+                    await editMemberLocal(appState.editingMember.id, formData);
                 } else {
-                    await addMember(formData);
+                    await addMemberLocal(formData);
                 }
                 hideModal('member-modal');
             }
         });
 
-        // Member Modal cancel button
         document.getElementById('member-modal-cancel-btn').addEventListener('click', () => {
             hideModal('member-modal');
         });
 
-        // Member Details Modal close button
         document.getElementById('member-details-close-btn').addEventListener('click', () => {
             hideModal('member-details-modal');
             appState.selectedMember = null;
         });
 
-        // Photo Modal close button
         document.getElementById('photo-modal-close-btn').addEventListener('click', () => {
             hideModal('photo-modal');
-            document.getElementById('photo-modal-image').src = ''; // Clear image
+            document.getElementById('photo-modal-image').src = '';
         });
 
-        // Delete Confirm Modal buttons
         document.getElementById('delete-cancel-btn').addEventListener('click', () => {
             hideModal('delete-confirm-modal');
             appState.memberToDelete = null;
         });
         document.getElementById('delete-confirm-btn').addEventListener('click', async () => {
             if (appState.memberToDelete) {
-                await deleteMember(appState.memberToDelete.id);
+                await deleteMemberLocal(appState.memberToDelete.id);
                 hideModal('delete-confirm-modal');
                 appState.memberToDelete = null;
             }
         });
 
-        // Events section actions
         document.getElementById('create-new-event-btn').addEventListener('click', () => {
             appState.editingEvent = null;
             populateEventForm(null);
             showModal('event-modal');
         });
 
-        // Event delegation for dynamically added event table buttons
         document.getElementById('events-table-body').addEventListener('click', (e) => {
             if (e.target.closest('.edit-event-btn')) {
                 const eventId = e.target.closest('.edit-event-btn').dataset.eventId;
@@ -1970,7 +1838,6 @@
             }
         });
 
-        // Event Modal form submission
         document.getElementById('event-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const form = e.target;
@@ -1985,23 +1852,21 @@
             };
 
             if (appState.editingEvent) {
-                await editEvent(appState.editingEvent.id, formData);
+                await editEventLocal(appState.editingEvent.id, formData);
             } else {
-                await addEvent(formData);
+                await addEventLocal(formData);
             }
             hideModal('event-modal');
         });
 
-        // Event Modal cancel button
         document.getElementById('event-modal-cancel-btn').addEventListener('click', () => {
             hideModal('event-modal');
         });
 
-        // Reports section actions
         document.getElementById('report-select').addEventListener('change', (e) => {
             appState.selectedReportType = e.target.value;
-            appState.generatedReportData = null; // Clear previous report data
-            renderReports(); // Re-render to update button state
+            appState.generatedReportData = null;
+            renderReports();
         });
         document.getElementById('generate-report-btn').addEventListener('click', () => {
             let selectedReportType = document.getElementById('report-select').value;
@@ -2013,10 +1878,9 @@
             renderReports();
         });
 
-        // Settings section actions
         document.getElementById('language-select-setting').addEventListener('change', (e) => {
             appState.language = e.target.value;
-            updateUI(); // Re-render entire UI for new language
+            updateUI();
         });
     </script>
 </body>
