@@ -40,6 +40,28 @@
         .dark .modal-content::-webkit-scrollbar-thumb:hover {
             background: #777;
         }
+
+        /* Animation for deleting a member row */
+        @keyframes fadeOutDownScale {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.9);
+                height: 0; /* Collapse the row height */
+                padding-top: 0;
+                padding-bottom: 0;
+                margin-top: 0;
+                margin-bottom: 0;
+                border-bottom: none; /* Remove border during collapse */
+            }
+        }
+
+        .animate-delete-fire {
+            animation: fadeOutDownScale 0.5s ease-out forwards;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
@@ -199,14 +221,6 @@
                             <option value="Parth-Way" id="status-parthway">Parth-Way</option>
                             <option value="New believer" id="status-newbeliever">New believer</option>
                             <option value="Visitor" id="status-visitor">Visitor</option>
-                        </select>
-                        <select id="members-per-page-select" class="px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-gray-50 dark:bg-gray-600 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-200 ease-in-out">
-                            <option value="5">Show 5</option>
-                            <option value="10">Show 10</option>
-                            <option value="20">Show 20</option>
-                            <option value="50">Show 50</option>
-                            <option value="100">Show 100</option>
-                            <option value="all">Show All</option>
                         </select>
                     </div>
                     <!-- Right side: Search -->
@@ -370,8 +384,8 @@
                     <label for="member-baptismStatus" class="block text-sm font-medium text-gray-700 dark:text-gray-300" id="baptism-status-label">Baptism Status</label>
                     <select id="member-baptismStatus" name="baptismStatus" class="mt-1 block w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm bg-white dark:bg-gray-600 text-gray-900 dark:text-gray-100 focus:ring-indigo-500 focus:border-indigo-500">
                         <option value="" id="select-baptism-status-placeholder">Select Baptism Status</option>
-                        <option value="Baptism done" id="baptism-done">Baptism done</option>
-                        <option value="Baptism not yet" id="baptism-not-yet">Baptism not yet</option>
+                        <option value="Baptism done" id="baptism-done">Done</option>
+                        <option value="Baptism not yet" id="baptism-not-yet">Not yet</option>
                     </select>
                 </div>
                 <div>
@@ -529,7 +543,7 @@
             memberSearchQuery: '',
             appliedSearchQuery: '',
             statusFilter: 'All',
-            membersPerPage: 10,
+            membersPerPage: 5, // Fixed to 5 members per page
             currentPage: 1,
             monthlyMembershipData: [
                 { month: 'Jan 2025', totalMembers: 150, newMembers: 10, activeMembers: 140 },
@@ -568,8 +582,8 @@
                     parthWay: 'Parth-Way',
                     newBeliever: 'New believer',
                     visitor: 'Visitor',
-                    baptized: 'Baptized',
-                    notYetBaptized: 'Not yet baptized',
+                    done: 'Done', // Changed from Baptism done
+                    notYet: 'Not yet', // Changed from Baptism not yet
                     show: 'Show',
                     importExcel: 'Import Excel',
                     exportExcel: 'Export Excel',
@@ -647,8 +661,6 @@
                     search: 'Search',
                     baptismStatus: 'Baptism Status',
                     selectBaptismStatus: 'Select Baptism Status',
-                    baptismDone: 'Baptism done',
-                    baptismNotYet: 'Baptism not yet',
                 },
                 km: {
                     dashboard: 'ផ្ទាំងគ្រប់គ្រង',
@@ -677,8 +689,8 @@
                     parthWay: 'ស្ថិតជាប់ព័ន្ធកិច្ច',
                     newBeliever: 'អ្នកជឿថ្មី',
                     visitor: 'អ្នកថ្មី',
-                    baptized: 'បាន​ច្រមុជទឹក',
-                    notYetBaptized: 'មិនទាន់ច្រមុជទឹក',
+                    done: 'បាន​ច្រមុជទឹក', // Changed from Baptism done
+                    notYet: 'មិនទាន់ច្រមុជទឹក', // Changed from Baptism not yet
                     show: 'បង្ហាញ',
                     importExcel: 'នាំចូល Excel',
                     exportExcel: 'នាំចេញ Excel',
@@ -756,8 +768,6 @@
                     search: 'ស្វែងរក',
                     baptismStatus: 'ស្ថានភាពពិធីបុណ្យជ្រមុជទឹក',
                     selectBaptismStatus: 'ជ្រើសរើសស្ថានភាពពិធីបុណ្យជ្រមុជទឹក',
-                    baptismDone: 'បាន​ទទួល​បុណ្យ​ជ្រមុជ​ទឹក',
-                    baptismNotYet: 'មិន​ទាន់​ទទួល​បុណ្យ​ជ្រមុជ​ទឹក',
                 },
             }
         };
@@ -787,7 +797,6 @@
                 'members-nav-text': 'members',
                 'events-nav-text': 'events',
                 'reports-nav-text': 'reports',
-                // 'loading-text': 'loading', // Removed loading spinner
                 'dashboard-overview-title': 'dashboardOverview',
                 'dashboard-welcome-text': 'welcomeDashboard',
                 'total-members-title': 'totalMembers',
@@ -809,7 +818,7 @@
                 'table-name-header': 'name',
                 'table-gender-header': 'gender',
                 'table-phone-header': 'phone',
-                'table-baptism-status-header': 'baptismStatus',
+                'table-baptism-status-header': 'Baptism Status', // Keep original for header, translation will apply to content
                 'table-status-header': 'status',
                 'table-actions-header': 'actions',
                 'prev-page-btn': 'previous',
@@ -837,7 +846,6 @@
                 'profile': 'profile',
                 'settings': 'settings',
                 'logout': 'logout',
-                // 'loading': 'loading', // Removed loading spinner
                 'editMember': 'editMember',
                 'addMember': 'addMember',
                 'profilePhoto': 'profilePhoto',
@@ -882,8 +890,6 @@
                 'search': 'Search',
                 'baptism-status-label': 'baptismStatus',
                 'select-baptism-status-placeholder': 'selectBaptismStatus',
-                'baptism-done': 'baptismDone',
-                'baptism-not-yet': 'baptismNotYet',
             };
 
             for (const id in elementsToTranslate) {
@@ -893,14 +899,20 @@
                     if (element.tagName === 'INPUT' && element.placeholder) {
                         element.placeholder = getTranslation(translationKey);
                     } else if (element.tagName === 'OPTION') {
-                        element.textContent = getTranslation(translationKey);
+                        // Special handling for baptism status options
+                        if (id === 'baptism-done') {
+                            element.textContent = getTranslation('done');
+                        } else if (id === 'baptism-not-yet') {
+                            element.textContent = getTranslation('notYet');
+                        } else {
+                            element.textContent = getTranslation(translationKey);
+                        }
                     } else {
                         element.textContent = getTranslation(translationKey);
                     }
                 }
             }
 
-            // Handle select options separately for dynamic translation
             const statusSelect = document.getElementById('status-filter-select');
             if (statusSelect) {
                 Array.from(statusSelect.options).forEach(option => {
@@ -912,30 +924,17 @@
                 });
             }
 
-            const membersPerPageSelect = document.getElementById('members-per-page-select');
-            if (membersPerPageSelect) {
-                Array.from(membersPerPageSelect.options).forEach(option => {
-                    if (option.value === 'all') {
-                        option.textContent = getTranslation('allStatuses');
-                    } else {
-                        option.textContent = getTranslation('show') + ' ' + option.value;
-                    }
-                });
-            }
-
             const baptismStatusSelect = document.getElementById('member-baptismStatus');
             if (baptismStatusSelect) {
                 Array.from(baptismStatusSelect.options).forEach(option => {
                     if (option.value === '') {
                         option.textContent = getTranslation('selectBaptismStatus');
+                    } else if (option.value === 'Baptism done') {
+                        option.textContent = getTranslation('done');
+                    } else if (option.value === 'Baptism not yet') {
+                        option.textContent = getTranslation('notYet');
                     } else {
-                        if (option.value === 'Baptism done') {
-                            option.textContent = getTranslation('baptismDone');
-                        } else if (option.value === 'Baptism not yet') {
-                            option.textContent = getTranslation('baptismNotYet');
-                        } else {
-                            option.textContent = option.value;
-                        }
+                        option.textContent = option.value;
                     }
                 });
             }
@@ -982,8 +981,6 @@
                 }
             });
         }
-
-        // Removed showLoadingSpinner and hideLoadingSpinner as local operations are instant
 
         function renderActiveSection() {
             const sections = ['dashboard-section', 'members-section', 'events-section', 'reports-section', 'settings-section'];
@@ -1062,7 +1059,7 @@
             } else {
                 currentMembers.forEach(member => {
                     const row = membersTableBody.insertRow();
-                    row.className = "hover:bg-gray-50 dark:hover:bg-gray-600";
+                    row.className = "hover:bg-gray-50 dark:hover:bg-gray-600 member-row-" + member.id; // Add a unique class for animation targeting
 
                     const photoCell = row.insertCell();
                     photoCell.className = "px-4 py-3 whitespace-nowrap";
@@ -1093,7 +1090,10 @@
 
                     const baptismStatusCell = row.insertCell();
                     baptismStatusCell.className = "px-4 py-3 whitespace-nowrap";
-                    baptismStatusCell.textContent = getTranslation(member.baptismStatus?.toLowerCase().replace(/[\s-]/g, '') || '') || member.baptismStatus || '';
+                    // Use the translation keys 'done' and 'notYet'
+                    baptismStatusCell.textContent = member.baptismStatus === 'Baptism done' ? getTranslation('done') :
+                                                   (member.baptismStatus === 'Baptism not yet' ? getTranslation('notYet') : member.baptismStatus || '');
+
 
                     const statusCell = row.insertCell();
                     statusCell.className = "px-4 py-3 whitespace-nowrap";
@@ -1390,7 +1390,8 @@
                 </div>
                 <div>
                     <p class="text-sm font-medium text-gray-700 dark:text-gray-300" id="baptism-status-display-label">${getTranslation('baptismStatus')}:</p>
-                    <p class="mt-1 text-gray-900 dark:text-gray-100">${getTranslation(member.baptismStatus?.toLowerCase().replace(/[\s-]/g, '') || '') || member.baptismStatus || ''}</p>
+                    <p class="mt-1 text-gray-900 dark:text-gray-100">${member.baptismStatus === 'Baptism done' ? getTranslation('done') :
+                                                                       (member.baptismStatus === 'Baptism not yet' ? getTranslation('notYet') : member.baptismStatus || '')}</p>
                 </div>
             `;
             detailsContent.innerHTML = html;
@@ -1563,10 +1564,9 @@
         }
 
         document.addEventListener('DOMContentLoaded', async () => {
-            loadData(); // Load data from local storage on startup
-            updateUI(); // Initial UI render
+            loadData();
+            updateUI();
 
-            // Dynamically load XLSX library
             const loadScript = (src, id, onloadCallback) => {
                 if (!document.getElementById(id)) {
                     const script = document.createElement('script');
@@ -1584,7 +1584,6 @@
             });
         });
 
-        // --- Event Listeners ---
         document.getElementById('theme-toggle').addEventListener('click', () => {
             appState.theme = appState.theme === 'light' ? 'dark' : 'light';
             document.documentElement.classList.toggle('dark', appState.theme === 'dark');
@@ -1626,11 +1625,6 @@
             appState.currentPage = 1;
             renderMembers();
         });
-        document.getElementById('members-per-page-select').addEventListener('change', (e) => {
-            appState.membersPerPage = e.target.value === 'all' ? appState.members.length : Number(e.target.value);
-            appState.currentPage = 1;
-            renderMembers();
-        });
         document.getElementById('add-new-member-btn').addEventListener('click', () => {
             appState.editingMember = null;
             populateMemberForm(null);
@@ -1646,7 +1640,6 @@
                 try {
                     if (typeof window.XLSX === 'undefined') {
                         console.error("XLSX library not loaded.");
-                        // Replaced alert with console.log as per instructions
                         console.log("Excel import is not ready. Please try again or refresh the page.");
                         return;
                     }
@@ -1672,7 +1665,7 @@
                             telegram: row['Telegram'] || '',
                             photo: row['Photo'] || '',
                         };
-                        await addMemberLocal(newMemberData); // Use local add function
+                        await addMemberLocal(newMemberData);
                     }
                     console.log('Members imported successfully!');
                 } catch (error) {
@@ -1817,9 +1810,32 @@
         });
         document.getElementById('delete-confirm-btn').addEventListener('click', async () => {
             if (appState.memberToDelete) {
-                await deleteMemberLocal(appState.memberToDelete.id);
-                hideModal('delete-confirm-modal');
-                appState.memberToDelete = null;
+                const memberIdToDelete = appState.memberToDelete.id;
+                const rowElement = document.querySelector(`.member-row-${memberIdToDelete}`);
+
+                if (rowElement) {
+                    // Add the animation class
+                    rowElement.classList.add('animate-delete-fire');
+
+                    // Listen for the animation end event
+                    rowElement.addEventListener('animationend', async function handler() {
+                        // Remove the event listener to prevent multiple calls
+                        rowElement.removeEventListener('animationend', handler);
+
+                        // Perform the actual deletion and UI update after animation
+                        await deleteMemberLocal(memberIdToDelete);
+                        hideModal('delete-confirm-modal');
+                        appState.memberToDelete = null;
+                        // Re-render members to ensure pagination and display are correct
+                        renderMembers();
+                    });
+                } else {
+                    // Fallback if row element not found (shouldn't happen with proper class)
+                    await deleteMemberLocal(memberIdToDelete);
+                    hideModal('delete-confirm-modal');
+                    appState.memberToDelete = null;
+                    renderMembers();
+                }
             }
         });
 
